@@ -1,0 +1,101 @@
+\lec{4}{09/09/25}{Properties of Relative Entropy \& Mutual Information, Data Processing}
+It is important to remember that the entropy of \(X\) is maximized by a uniform probability mass function on a finite alphabet \(\mathcal{X} \).
+\begin{thrm}{}{}
+\[
+    H(X) \leq \log \left\lvert \mathcal{X}  \right\rvert 
+\]
+with equality if and only if \(p_{X} (x) = \frac{1}{\left\lvert \mathcal{X}  \right\rvert }\) for every \(x \in \mathcal{X} \). 
+\tcbline
+
+
+\begin{proof}
+Consider a random variable \(X\) defined on \(\mathcal{X} \) with \(\left\lvert \mathcal{X}  \right\rvert  = n\). Let \(U\) be the uniform distribution on \(\mathcal{X} \).
+
+\begin{align*}
+    H(U) - H(X) &=  \log _2 \left\lvert \mathcal{X}  \right\rvert  - \sum_{x \in \mathcal{X} } p(x) \log \frac{1}{p(x)} \\ &=  \sum_{x \in \mathcal{X} } p(x)\log \left\lvert \mathcal{X}  \right\rvert  - \sum_{x \in \mathcal{X} }p(x)\log \frac{1}{p(x)} \\
+    &= \sum_{x\in \mathcal{X} } p(x)\log \frac{p(x)}{\frac{1}{\left\lvert \mathcal{X}  \right\rvert }} \\
+    &= D(p(x) \mid \mid  u(x)) \geq 0
+\end{align*}
+Hence, \(H(U) \geq H(X)\) with equality if and only if \(X\) is uniformly distributed. 
+\end{proof}
+\end{thrm}
+
+
+\begin{thrm}{Convexity of Relative Entropy}{}
+\(D(p(x) \mid \mid q(x))\) is convex in the pair \((p(x), q(x))\); that is, if \((p_1(x),q_1(x))\) and \((p_2(x),q_2(x))\) are two pairs of probability mass functions on \(\mathcal{X} \), then
+\[
+    D(\lambda p_1 + (1 -\lambda )p_2 \mid \mid  \lambda q_1 + (1 -\lambda )q_2) \leq \lambda D(p _1 \mid \mid q_1) + (1 -\lambda )D(p_2 \mid \mid q_2)
+\]
+for all \(0\leq \lambda \leq 1\).  
+\end{thrm}
+
+\newpage
+
+\section{Data Processing Inequality (DPI)}
+
+\begin{defn}{}{}
+Say we have random variables \(X,Y,Z\) which form a Markov Chain (\(X \to Y\to Z\)). Recall that
+\[
+    p(x,y,z) = p(x)p(y\mid x)p(z\mid y,x) = p(x)p(y\mid x)p(z\mid y). 
+\]
+The last equality follows from  the Markov property. Some simple consequences are as follows:
+
+
+\begin{enumerate}
+    \item \(X \to Y \to Z\) if and only if \(X\) and \(Z\) are conditionally independent given \(Y\). Markovity implies this conditional independence since
+    \[
+        p(x, z\mid y) = \frac{p(x,y,z)}{p(y)} = \frac{p(x,y)p(z \mid y)}{p(y)} = p(x \mid y)p(z \mid y).   
+    \]
+    \item \(X \to Y \to Z\) implies that \(Z \to  Y \to  X\). Thus, we can simply write \(X - Y - Z\).  
+    \item \(I(X;Z\mid Y) = 0\)  
+    \item If \(Z = f(Y)\), then \(X \to Y \to Z\) is a Markov chain.
+\end{enumerate}
+
+\end{defn}
+
+
+We now prove an important and useful theorem demonstrating that no processing of \(Y\), deterministic or random, can increase the information that \(Y\) contains about \(X\).  
+
+\begin{thrm}{Data-processing Inequality }{}
+If \(X \to Y \to Z\), then \(I(X;Y)\geq I(X;Z)\) with equality if and only if \(I(X;Y \mid Z) = 0\).  Intuitively, no amount of processing on \(Y\), deterministic or randomized, can make you learn more about \(X\). 
+
+\tcbline
+\begin{proof}
+By the chain rule, we can expand mutual information in two different ways:
+\begin{align*}
+    I(X;Y, Z) &=  I(X;Y) + I(X;Z \mid Y)\\
+    &=  I(X;Z) + I(X;Y \mid Z).
+\end{align*}
+
+Since \(X\) and \(Z\) are conditionally independent given \(Y\), we have \(I(X;Z \mid Y) = 0\). Since \(I(X;Y \mid Z) \geq 0\), we have 
+\begin{align*}
+    I(X;Y) \geq I(X;Z). 
+\end{align*}
+We have equality if and only if \(I(X; Y |Z) = 0\). Similarly, one can prove that \(I(Y;Z) \geq I(X;Z)\). 
+\end{proof}
+
+\end{thrm}
+
+\begin{cor}{}{}
+    If \(X - Y - Z\) forms a Markov chain, then the dependency between \(X\) and \(Y\) is decreased by observation of a "downstream" random variable \(Z\). In other words,
+    \[
+        I(X;Y\mid Z) \leq I(X;Y). 
+    \]
+
+\end{cor}
+
+STOPPED EDITING HERE.
+
+\section{Asymptotic Equipartition Property}
+
+Entropy is directly related to the fundamental limits of data compression. 
+
+\begin{enumerate}
+    \item For a sequence of \(n\) i.i.d random variables \(\left\{ X_{i}  \right\}_{i = 1}^n \thicksim  B(\frac{1}{2})\), we need \(nH(X_1) = n\) bits to describe the sequence. 
+    \item What if \( X _{i} \thicksim B(0.11)\) instead of being a fair coin flip? Now, we should need about \(n / 2 = nH(0.11) = nH(X_1)\)  bits. 
+\end{enumerate}
+
+Ratio of the number of typical sequences to the total number of sequences is 
+\[
+    \frac{s^{nH(X)} }{2^n} \overbrace{\to}^{n \to  \infty } 0 
+\]

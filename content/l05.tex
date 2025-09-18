@@ -1,0 +1,110 @@
+\lec{5}{09/11/25}{AEP, Data compression}
+
+Readings: C \& T Ch 3, 4.1-2
+
+\begin{exmp}{Recap from last lecture}{}
+Take \(n = 1000\) and \(p = 0.11\). This means that \(H(p) = 0.5\). We call a typical sequence to have \(np\) ones and \(n \overline{p} \) zeroes. The number of typical sequences is \(2^{nH(X)} = 2^{500} \) while the probability of observing a typical sequence is \(2^{- 500} \). 
+\end{exmp}
+
+\begin{thrm}{AEP}{}
+If we have the following independently and identically distributed random variables \(X_1, \dots , X_{n}  \thicksim p(x)\) then
+\[
+    \frac{1}{n}\log _2 \frac{1}{p(x_1,\dots , x_n)} \to H(X) \text{ \textit{ in probability.}} 
+\]
+
+\tcbline
+
+\begin{proof}
+
+Take \(Y_{i} = \frac{1}{n}\log _2 \frac{1}{p(x_{i} )}\). Then we have 
+\[
+    \frac{1}{n}\log  \frac{1}{p(x_1,\dots ,x_n)} = \frac{1}{n}\sum_{i = 1}^{n} \log \frac{1}{p(x_{i} )} = \frac{1}{n} \sum_{i = 1}^{n} Y_{i}.    
+\]
+
+By WLLN,
+\[
+    \frac{1}{n}\sum_{i = 1}^{n} Y_{i} \overset{p}{\to} \mathbb{E} [Y] .
+\]
+\end{proof}
+
+\end{thrm}
+
+\begin{defn}{Convergence in probability}{}
+Given random variables \(X_1,X_2, \dots  \) we say convergence in probability to the random variable \(X\) happens if 
+\[
+    \forall \epsilon > 0 \lim_{n \to \infty} \mathrm{Pr} \left\{ |X_{n} - X| > \epsilon  \right\} = 0.
+\]
+\end{defn}
+
+\begin{exmp}{\(\epsilon -\)typical set   }{}
+\[
+    A_{\epsilon }^{(n)} = \left\{ x^n : 2^{- n(H(X) + \epsilon )} \leq p(x^n) \leq 2^{- n(H(X) - \epsilon )} \right\} 
+\]
+\end{exmp}
+
+\begin{misc}{Properties of AEP}{}
+\begin{enumerate}
+    \item \(Pr(x^n \in A_{\epsilon }^{(n)} ) \geq 1 - \epsilon \) 
+    \item \(\left\lvert A_{\epsilon }^{(n) } \right\rvert \leq 2^{n(H(X) + \epsilon )} \) 
+    \item \(A_{\epsilon }^{(n)} \geq (1 - \epsilon )2^{n(H(X) - \epsilon )} \) 
+\end{enumerate}
+\end{misc}
+
+\section{Data Compression}
+
+There exists a code that maps input sequences \(\left\{ x^n \right\} \) to binary strings such that the mapping is one-to-one (and therefore reversible). Let \(l(x^n)\) denote the length of the binary codeword for \(x^n\). Divide your sequences into two sets, typical and atypical. This division is dictated by the sequences which are in the \(A_{\epsilon }^{(n)} \). 
+
+\[
+\text{\# of bits needed to represent a typical sequence  }  \leq n(H(X) + \epsilon ) + 1
+\]
+
+\[
+\text{\# of bits needed to represent an atypical sequence  }  \leq n\log _2 |\mathcal{X} | + 1
+\]
+
+Essentially, if the given sequence falls into the typical set, simply send the codeword for the sequence. Otherwise, send the uncompressed sequence. When sending sequences, an extra header bit needs to be added to the sequence in order to indicate if the sequence is compressed or not.
+
+\begin{align*}
+    \mathbb{E} [l(x^n)] &= \mathbb{E} [l(x^n)|x^n \in A_{\epsilon }^{(n)} ] \mathrm{Pr}(A_{\epsilon }^{(n)} ) + \mathbb{E} [l(x^n)| x^n \notin A_{\epsilon }^{(n)} ]\mathrm{Pr} \left[ (A_{\epsilon }^{(n)} ) ^{C} \right] \\
+    &= [n(H + \epsilon )+ 2]\mathrm{Pr}(A_{\epsilon }^{(n)} ) + \left[ n\log _2 \left\lvert \mathcal{X}  \right\rvert + 2  \right] \mathrm{Pr} \left[ (A_{\epsilon }^{(n)} ) ^{C} \right] \\
+    &\leq n(H + \epsilon )+ \epsilon n \log _2|\mathcal{X} | + 2\\
+    &= n(H(X) + \epsilon ')  \text{ where } \epsilon ' = \epsilon + \epsilon \log _2 \left\lvert \mathcal{X}     \right\rvert + \frac{2}{n}
+\end{align*}
+
+\begin{thrm}{}{}
+
+    For this scheme specifically we have the following: 
+\[
+    \forall \; \epsilon >0 \;\;\exists \; n \text{ such that } \mathbb{E} [l(x^n)] \leq n \left[ H(X) + \epsilon  \right]. 
+\]
+\end{thrm}
+
+\begin{defn}{}{}
+Let \(X_1,X_2, \dots , X_{n} \overset{\text{iid} }{\thicksim} p(x)\). For each \(n = 1, 2, ..\), define \(B_{n} \subset \mathcal{X}^n \) to be the smallest set with \( \mathrm{Pr} \left\{ x^n \in B_{n}  \right\} \geq 1 - \epsilon   \). We can show that \(\left\{ B_{n} \cap A_{\epsilon }^{(n)}  \right\} \) is significant, and that they have essentially the same number of elements. 
+
+Thrm 3.3.1 
+\end{defn}
+
+Converse of achievability:
+
+The optimal source code would assign shorter descriptions to more probable outcomes. We will construct a minimum expected length code that is unique (so-called "non-singular") \(n -\)code as follows.
+
+
+\begin{enumerate}
+    \item Order \(X^n\) according to their probabilities
+    \item Assign codeword 0 to the highest probability sequence
+    \item Assign codeword 1 to the second highest probability sequence
+    \item Assign codeword 00 to the third highest probability sequence
+    \item And so on and so forth 
+\end{enumerate}
+
+\noindent This procedure maps the (\(2^{l + 1} - 2\) ) most likely sequences into unique codewords of length \( \leq l\). 
+
+Now set \( l = n(H(X) - 2\epsilon )\). \(B_{n} \) is the set of \(2^{l + 1}- 2\) most likely sequences of length \(n\). This means \(\left\lvert B_{n}  \right\rvert  = 2^{n(H(X) - 2\epsilon ) + 1} - 2\).
+
+Fill in details:
+\begin{align*}
+    \mathrm{Pr} \left\{ X^n \in  B_{n}  \right\} &= \mathrm{Pr} (B_{n} \cap (A_{\epsilon } ^{(n)})) + \mathrm{Pr} (B_{n} \cap A_{\epsilon ^{(n)}} ) \\
+    &\leq \epsilon  + \left\lvert B_{n}  \right\rvert 2^{- n(H - \epsilon )} \\
+    &\leq a \epsilon \text{ where } a > 1
+\end{align*}

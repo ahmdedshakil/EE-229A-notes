@@ -1,0 +1,13 @@
+\contentsline {part}{I\hspace {1em}Introduction to Information Theory}{3}{part.1}%
+\contentsline {chapter}{\numberline {1}Intro to Information Theory, Historical background - 08/28/25}{4}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Intro to Entropy and Mutual Information - 09/02/25}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Mutual Information}{6}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Convexity and Jensen's Inequality}{6}{section.2.2}%
+\contentsline {chapter}{\numberline {3}Cross Entropy and Relative Entropy - 09/04/25}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Relative Entropy}{10}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Properties of Relative Entropy \& Mutual Information, Data Processing - 09/09/25}{12}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Data Processing Inequality (DPI)}{13}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Asymptotic Equipartition Property}{14}{section.4.2}%
+\contentsline {part}{II\hspace {1em}Compression (Source Coding)}{15}{part.2}%
+\contentsline {chapter}{\numberline {5}AEP, Data compression - 09/11/25}{16}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Data Compression}{17}{section.5.1}%

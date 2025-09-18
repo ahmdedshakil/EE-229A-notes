@@ -1,0 +1,130 @@
+\lec{3}{09/04/25}{Cross Entropy and Relative Entropy}
+
+
+\begin{misc}{Recap of the previous lecture}{}
+We defined entropy as
+\[
+    H(X) = \sum_{x \in \mathcal{X} } p(x) \log \frac{1}{p(x)}.
+\]
+We defined conditional entropy as
+\[
+    H(X\mid Y) = \sum_{x\in \mathcal{X} }\sum_{y\in \mathcal{Y} }  p(x,y) \log \frac{1}{p(x\mid y)} .
+\]
+We also have the following chain rule for entropy
+\[
+    H(X_1,X_2, \dots , X_{n}  ) = \sum_{i = 1} H(X_i\mid X^{i- 1} ).
+\]
+For any convex function \(f(x)\), Jensen's inequality states
+\[
+    \mathbb{E} \left[ f(x) \right] \geq f(\mathbb{E} \left[ X \right] ). 
+\]
+Lastly, we defined mutual information as 
+\[
+    I(X;Y) = H(X)- H(X\mid Y) = H(Y)- H(Y\mid X) = H(X) + H(Y)- H(X,Y)  = I(Y;X) \geq 0.
+\]
+Some properties of entropy are listed below:
+\begin{enumerate}
+    \item \(H(X) \geq 0\) 
+    \item \(H(X) \leq \log _2 \left\lvert \mathcal{X}  \right\rvert \), the upper bound is only attained when the distribution is uniform
+\end{enumerate}
+As a general rule, the uniform distribution maximizes entropy for finite alphabet sources. 
+\end{misc}
+
+\begin{thrm}{Chain Rule for Mutual Information}{}
+\[
+    I(X;Y_1,Y_2) = I(X;Y_1) + I(X;Y_2\mid Y_1).
+\]
+In general, we have the following:
+\[
+    I(X_1, \dots , X_{n} ;Y) = \sum_{i = 1} ^n I(X_{i} ;Y \mid X^{i - 1}). 
+\]
+\end{thrm}
+
+
+
+\begin{defn}{Cross Entropy}{}
+\textit{Cross entropy} is the amount of information required on average to describe a random variable \(X \thicksim p(x)\) if a description of another random variable with pmf \(q(x)\) is used instead.   Let \(p(x) \) and \(q(x)\) be two probability mass functions over the same alphabet \(\mathcal{X} \). The \textit{cross entropy} between \(p(x)\) and \(q(x)\) is defined as 
+\[
+    H(p(x),q(x)) = \sum_{x\in \mathcal{X} } p(x)\log \frac{1}{q(x)} = \mathbb{E} _{p} \left[ \log \frac{1}{q(x)}  \right]  .
+\]
+Intuitively, we should think of this quantity as quantifying the mismatch of \(p(x)\) and \(q(x )\). In a sense we are pretending \(q(x)\) is \(p(x)\), when in reality the truth is \(p(x) \).   Some properties of cross-entropy:
+\begin{enumerate}
+    \item \(H(p,q) \geq 0\) 
+    \item \(H(p) = H(p,p)\) 
+    \item \(H(p,q)\geq H(p)\) 
+\end{enumerate}
+\end{defn}
+\section{Relative Entropy}
+\begin{defn}{Relative Entropy}{}
+Let \(p(x)\) and \(q(x)\) be two probability mass functions over the same alphabet \(\mathcal{X} \). The \textit{relative entropy} or \textit{Kullback-Leibler divergence} (KL divergence), between \(p(x)\) and \(q(x)\) is defined as 
+
+\[
+    D(p(x)\mid \mid q(x))\coloneqq \sum_{x \in \mathcal{X} } p(x) \log  \frac{p(x)}{q(x)} = \mathbb{E} _{p} \left[ \log \frac{p(x)}{q(x )}  \right] = H(p(x), q(x)) - H(p(x)).
+\]
+For brevity, sometimes we will use the notation \(D(p \mid \mid q)\) for relative entropy.  Although we intuitively take this as a distance between distributions, this is not a metric as it does not satisfy the triangle inequality and is not symmetric.   Two important properties to note about this quantity is the following
+\begin{enumerate}
+    \item \(D(p\mid \mid p)= 0  \) 
+    \item \(D(p\mid \mid q) \geq 0\) for all \(p,q\) with equality if and only if \(p = q\).
+\end{enumerate}
+\end{defn}
+
+\begin{thrm}{Gibbs Inequality}{}
+Let \(p(x)\) and \(q(x)\), where \(x\in \mathcal{X} \) and \(\mathcal{X} \) is a finite alphabet, be two probability mass functions. Then \[D(p\mid \mid q) \geq 0\] with equality if and only if \(p(x) = q(x) \text{ for every }  x \in \mathcal{X} \).
+\tcbline
+\begin{proof}
+Let \(A = \left\{ x: p(x) > 0 \right\} \) be the support set of \(p(x)\). Then
+\begin{align}
+- D(p\mid \mid q) &= - \sum_{x\in A} p(x) \log \frac{p(x)}{q(x)}\\ 
+&= \sum_{x\in A} p(x) \log \frac{q(x)}{p(x)}\\
+&\leq \log  \sum_{x\in A}  p(x)\frac{q(x)}{p(x)} \label{eq:1}\\ 
+&= \log \sum_{x\in A} q(x)\\
+&\leq \log \sum_{x\in \mathcal{X} }q(x)\label{eq:2}\\ 
+&= \log 1\\  
+&= 0,     
+\end{align}
+where \eqref{eq:1} follows from Jensen's inequality. Since the \(\log \) function is strictly concave, we have equality in \eqref{eq:1} if and only if \(q(x) / p(x)\) is  constant everywhere. Thus, \(\sum_{x \in \mathcal{A} }q(x) = c\sum_{x \in A}p(x) = c  \). We have equality in \eqref{eq:2} if and only if \(\sum_{x \in A}q(x) = \sum_{x \in \mathcal{X} }q(x) = 1  \), which implies that \(c = 1\). Hence, we have \(D(p \mid \mid q) = 0\) if and only if \(p(x) = q(x)\) for every \(x\).    
+\end{proof}
+
+\end{thrm}
+
+
+\begin{cor}{Minimum Cross Entropy}{}
+\[
+    H(p(x),q(x)) \geq H(p(x))
+\]
+with equality if and only if \(p(x) = q(x)\). 
+\tcbline
+\begin{proof}
+Follows from \(D(p\mid \mid q) = H(p,q) - H(p)\) and \(D(p\mid \mid q)\geq 0\).  
+\end{proof}
+
+\end{cor}
+\begin{cor}{}{}
+\[
+    I(X;Y) \geq 0 
+\]
+
+\tcbline 
+\begin{proof}
+\[
+    I(X;Y) = \mathbb{E} \left[ \log \frac{p(x,y)}{p(x)p(y)}  \right] = D(p(x,y)\mid \mid p(x)\cdot p(y)) \geq 0
+\]
+\end{proof}
+
+\end{cor}
+
+\begin{cor}{}{}
+
+The following implies conditioning reduces entropy on average. 
+\[
+    H(X\mid Y) \leq H(X)
+\]
+
+\tcbline
+\begin{proof}
+\[
+    I(X;Y) = H(X)- H(X\mid Y) \geq 0
+\]
+\end{proof}
+
+\end{cor}
