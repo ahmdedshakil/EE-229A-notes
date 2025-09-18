@@ -1,0 +1,148 @@
+\lec{6}{09/18/25}{Optimal Codes, Huffman Codes, \& Uniquely Decodable Codes}
+
+
+Read C and T 5.1 - 5.8
+\noindent
+Project Summary due Oct 8
+
+\begin{rmk}{Recap}{}
+\begin{enumerate}
+    \item Prefix codes \(\subset \) Uniquely Decodable (UD) Codes
+    \item Kraft's inequality: Prefix code \(\leftrightarrow \sum_{i = 1}^{m} 2^{- l_{i} }\leq 1\)
+    \[
+        \min _{l_{i} }\sum_{i = 1}^m p_{i} l_{i} \text{ s.t. } l_{i} \in \mathbb{Z}^+ \text{ \& } c_{i}\text{'s obey prefix constant} 
+    \]
+\end{enumerate}
+\end{rmk}
+
+Let \(l_{\mathrm{max} } \) be the max depth of the tree. Each codeword at level \(i\) "knocks out" \(2^{l_{\mathrm{max} } - l_{i} }\) descendants at level \(l_{\mathrm{max} } \) and there are all non-overlapping
+\[
+    \sum_{i = 1}^{m} 2^{l_{\mathrm{max} } - l_{i}  } \leq 2^{l_{\mathrm{max} } }
+\]
+
+From this Kraft's inequality follows. The interval owned by the leaf node at level \(l_{i}  \) of the tree is equal to \(2^{- l_{i} } \) of the unit interval. 
+
+
+
+\begin{misc}{}{}
+\begin{align*}
+    \min  L = \sum_{i = 1}^{m} p _{i} l_{i} \\ \text{ s.t. } l_{i} > 0 \in \mathbb{Z} \\
+    \sum_{i = 1}^{m} 2^{- l _{i} } = 1
+\end{align*}
+To make this easier we relax the integer constraints, and we assume Kraft's with equality. Take Lagrangian and proceed. Fill in details. Results in \(p_{i} = 2^{- l _{i} }\) 
+
+Yielding optimal code length, \(l_{i} = \log (\frac{1}{p _{i} })\).  This results in \(L^{\ast} = H(X)\). \(l_{i} ^{\ast} = \log  \lceil \frac{1}{p _{i} } \rceil \) is feasible and therefore optimal if \(p _{i} \) are of the form \(p_{i} = 2^{-i} \). 
+\end{misc}
+
+Shannon suggested: \(l_{i} = \lceil \log \frac{1}{p _{i}  } \rceil \) 
+
+\begin{thrm}{}{}
+For a prefix code:
+    \[
+    \mathbb{E} \left[ l(X) \right] \geq H(X)
+\]
+
+\tcbline 
+\begin{proof}
+    \begin{align*}
+        L = \sum_{i = 1}^{m}p _{i} l _{i} = \sum_{i = 1}^{m} p _{i}  \log \frac{1}{2^{- l_{i} }} 
+    \end{align*}
+The key is to associate \(2^{- l_{i} }\) with its implicit distribution, \(q_{i} \propto 2^{- l_{i} }\). 
+
+\[
+    q_{i} = \frac{2^{- l _{i} }}{z}, \text{ where } z = \sum_{i = 1}^{m} 2^{- l _{i} } 
+    \]
+    
+\begin{align*}
+    L &=  \sum p_{i} \log (\frac{1}{q_{i} }) + \sum p_{i} \log (\frac{1}{z})\\
+    &= \sum p_{i} \log \left( \frac{p _{i} }{q _{i} }  \right) + \sum p_{i}  \log \frac{1}{p _{i} } + \log (\frac{1}{z})\\
+    &= D(p \mid \mid q) + H(X) + \log (\frac{1}{z})
+\end{align*}
+This shows \(L \geq H(X)\), Equality happens when \(z = 1\), and \(p = q\). In other words, equality when you have a complete code and \(p = 2^{- l_{i} }\).  
+\end{proof}
+
+\end{thrm}
+
+Shannon code: \(l_{i} = \lceil \log \frac{1}{p _{i} }  \rceil \) 
+
+\[
+    \log (\frac{1}{p _{i} }) \leq l_{i}  < \log (\frac{1}{p _{i} }) + 1
+\]
+
+\begin{align*}
+    \sum_{i} p_{i} \log (\frac{1}{p _{i} }) \leq \sum_{  i} p_{i}   l _{i} < \sum_{i} p_{i} \log (\frac{1}{p _{i} }) + 1\\
+    H(X) \leq L < H(X) + 1
+\end{align*}
+
+
+Note: 1 bit of overhead may not be ok if the entropy is small. We can reduce the over head by spreading it over many symbols. 
+
+Consider \(X^n = (X_1, \dots ,X_{n} )\) be an i.i.d sequence. Let \(\mathcal{L} _{n} \coloneqq \frac{1}{n}\mathbb{E} \left[ l(X^n) \right] = \frac{1}{n } \sum_{i = 1}^n p_{i} l_{i}   \). Using previous results 
+\begin{align*}
+    H(X^n) \leq \mathbb{E} [l(X^n)] < H(X^n) + 1 \\
+    nH(X)\leq L_{n} < H(X) + \frac{1}{n}
+\end{align*}
+
+This also generalizes to the non i.i.d. case. 
+
+\[
+    H(X^n) \leq \mathbb{E} \left[ l(X^n) \right] < H(X^n) + 1
+\]
+
+\begin{align*}
+    \lim_{n \to \infty} \frac{1}{n} H(X^n) \leq  \lim_{n \to \infty} \frac{1}{n} \mathbb{E} \left[ l(X^n) \right] < \lim_{n \to \infty} \frac{1}{n} (H(X^n) + 1)
+\end{align*}
+
+This is the entropy rate of the source, hence 
+\[
+    \lim_{n \to \infty} \frac{\mathbb{E} \left[ l(X^n) \right] }{n} = \mathcal{H} (X) 
+\]
+
+\section{Price of mistmatched probability model}
+
+If \(X \thicksim p\) but we believe that \(X \thicksim q\) when we compress \(X\), what is the price for this mismatch? It simply results in the cross entropy. 
+
+\[
+    L_{q} = \sum_{i}  p(x) \log \frac{1}{q(x)}= H(p,q) = D(p \mid \mid q) + H(X)
+\]
+
+fill in details. 
+
+Question: what are we giving up by resorting to prefix codes as opposed to the general class of UD codes. 
+
+Answer: We will show: NOTHING. 
+
+UD codes have nothing to offer with respect to performance gains over prefix codes. 
+
+\begin{thrm}{McMillan's Theorem}{}
+The code length of any UD binary code must satisfy Kraft's inequality:
+\begin{align*}
+    \sum_{i = 1}^m 2^{- l _{i} } \leq  1
+\end{align*}
+Conversely, given a set of  code lengths \(l_1, \dots , l_{m} \) that satisfy KI, it is possible to construct a UD code whose constructs have the given code lengths. 
+
+\tcbline
+\begin{proof}
+Converse is done since prefix codes are UD codes.
+
+We want to show UD codes imply KI. 
+
+The trick is to consider \(C^k\), the \(k^{th} \) extension of the base code \(C\). By definition, if \(C\) is UD, so is \(C^k\). Let \(l(x)\) be the code lengths of \(x \in \mathcal{X} \) in \(C\). For \(C^k\) the length of the codeword is 
+\[
+    l(x^k) = \sum_{i} l(x_{i} )
+\]
+
+We want to show that \(\sum_{i = 1}^{m} D^{- l_{i}} \leq 1\). 
+
+\begin{align*}
+    \left( \sum D^{- l_{i} }\right) ^k &=  \sum_{x_1}\dots \sum_{x_{k} }  D^{- \sum_{i} l(x_{i} )}\\
+    &= \sum_{x_1, \dots , x_{k} } D^{- l(x_1, \dots ,x_{k} )} 
+\end{align*}
+
+
+Let \(l_{\mathrm{max} } \) be the largest code length in \(C\). 
+fill the rest in later.
+\end{proof}
+
+
+\end{thrm}
